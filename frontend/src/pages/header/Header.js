@@ -11,7 +11,7 @@ function Header() {
         <Link to="/login">Login/Register</Link>
         <Link to="/whiteboard">Whiteboard</Link>
         <Link to="/chatroom">Chat</Link>
-        <Link to="/chatbot">AI Chat</Link>
+        <Link to="/aboutus">About us</Link>
       </nav>
     </header>
   );
