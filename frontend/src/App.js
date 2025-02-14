@@ -1,18 +1,27 @@
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
-import Loginsignup from "./pages/LoginAndSignup/Loginsignup.jsx";
-import MainChat from './pages/chatroom/mainchat.jsx';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/home/Home';
+import Login from './pages/LoginAndSignup/Loginsignup';
+import Whiteboard from './pages/whiteboard/Whiteboard';
+import Chatroom from './pages/chatroom/mainchat';
+import Header from './pages/header/Header';
+import Footer from './pages/footer/Footer';
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
+    <Router>
+      <div className="app">
+        <Header />
         <Routes>
-          <Route path="login" element={<Loginsignup/>}/>
-          <Route path="/" element={<MainChat/>}/>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/whiteboard" element={<Whiteboard />} />
+          <Route path="/chatroom" element={<Chatroom />} />
         </Routes>
-      </BrowserRouter>
-    </div>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
 export default App;
+

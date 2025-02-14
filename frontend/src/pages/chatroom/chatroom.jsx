@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import "./chatroom.css";
 
 const socket = io("http://localhost:4000");
 
@@ -33,9 +34,12 @@ const ChatRoom = ({ room, onLeave }) => {
     };
 
     return (
-        <div>
+        <div className="body1">
             <h2>Room: {room}</h2>
-            <button onClick={onLeave}>Leave Room</button>
+            <div className="Leave-room-btn">
+                <button onClick={onLeave}>Leave Room</button>
+
+            </div>
 
             <div className="chat-box">
                 {messages.map((msg, index) => (

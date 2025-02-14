@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import "./chatroom.css";
 
 const socket = io("http://localhost:4000");
 
@@ -28,7 +29,7 @@ const ChatRoomsList = ({ onJoinRoom }) => {
     };
 
     return (
-        <div>
+        <div className="body1">
             <h2>Available Chat Rooms</h2>
             <ul>
                 {rooms.map((room) => (
