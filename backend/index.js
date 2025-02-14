@@ -1,104 +1,151 @@
-const PORT = 10000;
-const express = require("express");
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const { PythonShell } = require('python-shell');
+const path = require('path');
+
 const app = express();
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-// const multer = require("multer");
-const path = require("path");
-const cors = require("cors");
-const { type } = require("os");
-const { request } = require("http");
-const { error } = require("console");
+const port = 5000;
 
+// Configure CORS to allow requests from frontend
+app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+}));
 
-app.use(express.json()); //response will auto pass thorugh json
-app.use(cors()); //react will connect using on the prot
+// Configure body parser with limits
+app.use(bodyParser.json({ 
+    limit: '50mb',
+    verify: (req, res, buf) => {
+        try {
+            JSON.parse(buf);
+        } catch(e) {
+            res.status(400).json({ error: 'Invalid JSON' });
+            throw new Error('Invalid JSON');
+        }
+    }
+}));
 
-app.use(
-      cors({
-          origin : "http://localhost:3000"
-      })
-)
-const Users=mongoose.model('Users',{
-      name:{
-            type:String
-      },
-      password:{
-            type:String
-      },
-      email:{
-            type:String
-      },
-      cartData:{
-            type:Object
-      },
-      date:{
-            type:Date
-      }
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
 
-})
-app.post('/signup',async (req,res)=>{
-      let check=await Users.findOne({email:req.body.email});
-      if(check){
-            return res.status(400).json({success:false,errors:"existing users found with same username"})
-      }
-      let cart ={};
-      for(let i=0;i<300;i++){
-            cart[i]=0
-      }
-      const user=new Users({
-      name:req.body.username,
-      email:req.body.email,
-      password:req.body.password,
-      cartData:cart,
-})
-await user.save();
-const data={
-      user:{
-            id:user.id
-      }
-}
-const token=jwt.sign(data,'secret-ecom');
-res.json({success:true,token})
-})
+// API endpoint for resume analysis
+app.post('/api/analyze-resume', async (req, res) => {
+    console.log('Received resume analysis request');
+    const { resume_text, job_description } = req.body;
 
+    // Input validation
+    if (!resume_text || !job_description) {
+        console.log('Missing required fields');
+        return res.status(400).json({ 
+            error: 'Missing required fields', 
+            details: 'Both resume text and job description are required' 
+        });
+    }
 
-app.post('/login',async (req,res)=>{
-let user=await Users.findOne({email:req.body.email});
-if(user){
-      const passCompare=req.body.password===user.password;
-      if(passCompare){
-            const data={
-                  user :{
-                        id:user.id
-                  }
-            }
-            const token=jwt.sign(data,'secret_ecom');
-            res.json({success:true,token});
-      }
-      else{
-            res.json({success:false,errors:"Wrong password"})
-      }
-}
-else{
-      res.json({success:false,errors:"Wrong email id"})
-}
+    // Check input length
+    if (resume_text.length > 50000 || job_description.length > 50000) {
+        return res.status(400).json({ 
+            error: 'Input too long',
+            details: 'Resume or job description exceeds maximum length of 50,000 characters'
+        });
+    }
 
-})
+    console.log('Processing with Python script...');
 
+    try {
+        let options = {
+            mode: 'json',
+            pythonPath: 'python',
+            pythonOptions: ['-u'], // unbuffered output
+            scriptPath: path.join(__dirname),
+            args: [JSON.stringify({ resume_text, job_description })],
+        };
 
-//Database connectio with mongo DB
-mongoose.connect("mongodb+srv://aarshjain2022:aarshjain@cluster0.grnmg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+        // Set timeout for Python script execution
+        const timeoutMs = 30000; // 30 seconds
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => {
+                reject(new Error('Analysis timed out'));
+            }, timeoutMs);
+        });
 
-  
+        // Execute Python script with timeout
+        const analysisPromise = new Promise((resolve, reject) => {
+            PythonShell.run('ats.py', options, (err, results) => {
+                if (err) reject(err);
+                else resolve(results);
+            });
+        });
 
+        // Race between timeout and analysis
+        const results = await Promise.race([analysisPromise, timeoutPromise]);
+        
+        if (!results || results.length === 0) {
+            throw new Error('No results returned from analysis');
+        }
 
+        const result = results[results.length - 1];
 
+        // Validate result structure
+        if (!result || typeof result.ats_score !== 'number') {
+            throw new Error('Invalid analysis result format');
+        }
 
-app.listen(PORT,() => {
-      try {
-            console.log(`Connected to database at PORT : ${PORT}`)
-      } catch (err) {
-            console.error(`Error connecting to database, Error : ${err}`)
-      }
-})
+        console.log('Analysis completed successfully');
+        res.json(result);
+
+    } catch (error) {
+        console.error('Error processing resume:', error);
+        
+        // Handle different types of errors
+        if (error.message.includes('timed out')) {
+            res.status(504).json({ 
+                error: 'Analysis timed out',
+                details: 'The analysis took too long to complete. Please try again.'
+            });
+        } else if (error.message.includes('No such file or directory')) {
+            res.status(500).json({ 
+                error: 'Server configuration error',
+                details: 'Could not find the analysis script. Please contact support.'
+            });
+        } else {
+            res.status(500).json({ 
+                error: 'Analysis failed',
+                details: error.message || 'An unexpected error occurred during analysis'
+            });
+        }
+    }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Unhandled error:', err);
+    res.status(500).json({ 
+        error: 'Server error',
+        details: 'An unexpected error occurred'
+    });
+});
+
+// Start server
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+    console.log('Press Ctrl+C to stop the server');
+});
+
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received. Shutting down gracefully...');
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught exception:', err);
+    process.exit(1);
+});

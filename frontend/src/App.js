@@ -5,6 +5,7 @@ import Whiteboard from './pages/whiteboard/Whiteboard';
 import Chatroom from './pages/chatroom/mainchat';
 import Header from './pages/header/Header';
 import Footer from './pages/footer/Footer';
+import ResumeATS from './pages/ats/Hardik'
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/whiteboard" element={<Whiteboard />} />
           <Route path="/chatroom" element={<Chatroom />} />
+          <Route path='/ats' element={<ResumeATS/>}/>
+
         </Routes>
         <Footer />
       </div>
