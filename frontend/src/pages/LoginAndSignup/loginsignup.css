@@ -1,6 +1,7 @@
 .loginsignup{
   width: 100%;  
-  background-color:linear-gra; 
+  background-image: url('lightblue.jpg');
+  background-color:rgb(135, 162, 187); 
   height: 80vh;
   padding-top: 100px;
 }
@@ -9,10 +10,13 @@
     height: 600px;
     margin: auto;
     padding: 10px 60px;
-    background-color:white;
-
+    background-color: rgba(208, 218, 228, 0.9);
+}
+.container *{
+    opacity: 1;
 }
 .container h1{
+    
     margin: 10px 0px;
     text-align: center;
 }
@@ -22,6 +26,7 @@
     flex-direction: column;
     gap: 15px;
     margin-top:30px ;
+    margin-left:75px;
 }
 .loginsignupfields input{
     border:none;
@@ -41,7 +46,7 @@ margin-bottom: 20px;
 .submit{
     width: 580px;
     height: 72px;
-    background-color:black;
+    background-color:#2c3e50;
     margin-top: 30px;
     font-size: 30px;
     font-weight: 500;
