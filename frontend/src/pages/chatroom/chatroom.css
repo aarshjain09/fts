@@ -1,0 +1,84 @@
+/* Chat Room Container */
+.chat-room-container {
+    width: 400px;
+    margin: auto;
+    background: black;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Chat Room Title */
+.chat-room-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+/* Leave Button */
+.leave-btn {
+    background: #dc3545;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.leave-btn:hover {
+    background: #c82333;
+}
+
+/* Chat Box */
+.chat-box {
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+/* Messages */
+.message {
+    background: #007bff;
+    color: white;
+    padding: 8px;
+    border-radius: 10px;
+    max-width: 75%;
+    margin-bottom: 5px;
+}
+
+.message.user {
+    background: #28a745;
+    align-self: flex-end;
+}
+
+/* Input & Send Button */
+.message-input {
+    width: 75%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.send-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.send-btn:hover {
+    background: #0056b3;
+}
