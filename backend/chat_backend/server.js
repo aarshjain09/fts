@@ -1,56 +1,84 @@
 const express = require("express");
 const http = require("http");
+const mongoose = require("mongoose");
 const { Server } = require("socket.io");
 const cors = require("cors");
 
+// Initialize Express app
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000", // Allow frontend connection
+        origin: "http://localhost:3000", // Allow frontend
         methods: ["GET", "POST"]
     }
 });
 
+// Middleware
 app.use(cors());
+app.use(express.json());
 
-let chatRooms = {}; // Stores active chat rooms and messages
+// Connect to MongoDB
+mongoose.connect("mongodb+srv://aarshjain2022:aarshjain@cluster0.grnmg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => console.log("MongoDB connected"))
+  .catch(err => console.error("MongoDB connection error:", err));
 
-io.on("connection", (socket) => {
+// Room Schema
+const RoomSchema = new mongoose.Schema({ name: String });
+const Room = mongoose.model("Room", RoomSchema);
+
+// Message Schema
+const MessageSchema = new mongoose.Schema({
+    room: String,
+    sender: String,
+    text: String,
+    timestamp: { type: Date, default: Date.now }
+});
+const Message = mongoose.model("Message", MessageSchema);
+
+io.on("connection", async (socket) => {
     console.log("User connected:", socket.id);
 
-    // Send available chat rooms when a user connects
-    socket.emit("roomList", Object.keys(chatRooms));
+    // Send available chat rooms from MongoDB
+    const rooms = await Room.find();
+    socket.emit("roomList", rooms.map(room => room.name));
 
-    // Handle room creation
-    socket.on("createRoom", (roomName) => {
-        if (!chatRooms[roomName]) {
-            chatRooms[roomName] = [];
-            io.emit("roomList", Object.keys(chatRooms)); // Update room list for all users
+    // Create a chat room (store in MongoDB)
+    socket.on("createRoom", async (roomName) => {
+        const existingRoom = await Room.findOne({ name: roomName });
+        if (!existingRoom) {
+            await new Room({ name: roomName }).save();
+            io.emit("roomList", (await Room.find()).map(room => room.name)); // Update for all users
         }
     });
 
-    // Handle joining a room
-    socket.on("joinRoom", (room) => {
+    // Join a room
+    socket.on("joinRoom", async (room) => {
         socket.join(room);
-        socket.emit("message", `You joined ${room}`);
-        socket.emit("chatHistory", chatRooms[room]); // Send previous messages
+        socket.emit("message", { sender: "System", text: `You joined ${room}`, timestamp: new Date() });
+
+        // Fetch and send chat history from MongoDB
+        const chatHistory = await Message.find({ room }).sort({ timestamp: 1 });
+        socket.emit("chatHistory", chatHistory);
     });
 
-    // Handle sending messages
-    socket.on("chatMessage", ({ room, message }) => {
-        const msg = `User ${socket.id}: ${message}`;
-        chatRooms[room].push(msg);
-        io.to(room).emit("message", msg); // Broadcast message to room
+    // Send a message
+    socket.on("chatMessage", async ({ room, message }) => {
+        const msg = { sender: socket.id, text: message, timestamp: new Date() };
+
+        // Emit immediately
+        io.to(room).emit("message", msg);
+
+        // Save to MongoDB
+        await new Message({ room, sender: socket.id, text: message }).save();
     });
 
-    // Handle user disconnect
     socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);
     });
 });
 
-// Start server on port 4000
-server.listen(4000, () => {
-    console.log("Chat server running on port 4000");
-});
+// Start server
+server.listen(4000, () => console.log("Server running on port 4000"));

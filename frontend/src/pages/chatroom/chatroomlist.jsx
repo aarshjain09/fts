@@ -5,41 +5,46 @@ const socket = io("http://localhost:4000");
 
 const ChatRoomsList = ({ onJoinRoom }) => {
     const [rooms, setRooms] = useState([]);
-    const [roomName, setRoomName] = useState("");
+    const [newRoom, setNewRoom] = useState("");
 
     useEffect(() => {
         socket.on("roomList", (updatedRooms) => {
             setRooms(updatedRooms);
         });
 
-        return () => socket.off("roomList");
+        // Request rooms when the component mounts
+        socket.emit("requestRooms");
+
+        return () => {
+            socket.off("roomList");
+        };
     }, []);
 
     const createRoom = () => {
-        if (roomName.trim() !== "") {
-            socket.emit("createRoom", roomName);
-            setRoomName("");
+        if (newRoom.trim()) {
+            socket.emit("createRoom", newRoom);
+            setNewRoom("");
         }
     };
 
     return (
         <div>
             <h2>Available Chat Rooms</h2>
-            <input
-                type="text"
-                value={roomName}
-                onChange={(e) => setRoomName(e.target.value)}
-                placeholder="Enter room name"
-            />
-            <button onClick={createRoom}>Create Room</button>
-
             <ul>
-                {rooms.map((room, index) => (
-                    <li key={index}>
-                        {room} <button onClick={() => onJoinRoom(room)}>Join</button>
+                {rooms.map((room) => (
+                    <li key={room}>
+                        <button onClick={() => onJoinRoom(room)}>Join {room}</button>
                     </li>
                 ))}
             </ul>
+
+            <input
+                type="text"
+                value={newRoom}
+                onChange={(e) => setNewRoom(e.target.value)}
+                placeholder="Enter room name"
+            />
+            <button onClick={createRoom}>Create Room</button>
         </div>
     );
 };
