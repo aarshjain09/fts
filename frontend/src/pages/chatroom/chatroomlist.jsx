@@ -30,22 +30,28 @@ const ChatRoomsList = ({ onJoinRoom }) => {
 
     return (
         <div className="body1">
-            <h2>Available Chat Rooms</h2>
-            <ul>
-                {rooms.map((room) => (
-                    <li key={room}>
-                        <button onClick={() => onJoinRoom(room)}>Join {room}</button>
-                    </li>
-                ))}
-            </ul>
+            <div className="Available">
+                <h2 >Available Chat Rooms</h2>
+            </div>
+            <div className="Rooms">
+                <ul>
+                    {rooms.map((room) => (
+                        <li key={room}>
+                            <button onClick={() => onJoinRoom(room)}>Join {room}</button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <div className="Input">
+                <input
+                    type="text"
+                    value={newRoom}
+                    onChange={(e) => setNewRoom(e.target.value)}
+                    placeholder="Enter room name"
+                />
+                <button onClick={createRoom}>Create Room</button>`
 
-            <input
-                type="text"
-                value={newRoom}
-                onChange={(e) => setNewRoom(e.target.value)}
-                placeholder="Enter room name"
-            />
-            <button onClick={createRoom}>Create Room</button>
+            </div>
         </div>
     );
 };

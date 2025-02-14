@@ -34,12 +34,11 @@ const ChatRoom = ({ room, onLeave }) => {
     };
 
     return (
-        <div className="body1">
-            <h2>Room: {room}</h2>
-            <div className="Leave-room-btn">
-                <button onClick={onLeave}>Leave Room</button>
-
+        <div >
+            <div className="chat-room-title">
+                <h2>Room: {room}</h2>
             </div>
+            <button className="leave-room-btn" onClick={onLeave}>Leave Room</button>
 
             <div className="chat-box">
                 {messages.map((msg, index) => (
@@ -48,14 +47,17 @@ const ChatRoom = ({ room, onLeave }) => {
                     </div>
                 ))}
             </div>
-
-            <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type a message"
-            />
-            <button onClick={sendMessage}>Send</button>
+            <div className="chat-input-container">
+                <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Type a message"
+                />
+                <div className="send-message">
+                    <button onClick={sendMessage}>Send</button>
+                </div>
+            </div>
         </div>
     );
 };
