@@ -1,5 +1,5 @@
 import React from 'react';
-import './AboutUs.css'; // Create a CSS file for styling
+import './AboutUs.css';
 
 const AboutUs = () => {
   return (
@@ -8,50 +8,48 @@ const AboutUs = () => {
         <h1>About CollabSpace</h1>
 
         <div className="about-section">
-          <h2>Our Mission</h2>
+          <h2>Our Inspiration</h2>
           <p>
-            At CollabSpace, our mission is to empower teams and individuals to
-            collaborate seamlessly and achieve their goals together. We believe
-            that effective communication and shared workspaces are essential for
-            success in today's fast-paced world.  We strive to provide a
-            user-friendly and feature-rich platform that fosters creativity,
-            productivity, and innovation.
+          The challenge of placement preparation inspired CollabSpace.  We, Vedant, Aarsh, Hardik, and Sahil, designed this platform during the 'HackAndroid' hackathon to solve the problem of fragmented study resources and isolated preparation.  CollabSpace brings everything together, making teamwork and efficient learning a reality.
           </p>
         </div>
 
         <div className="about-section">
-          <h2>Our Story</h2>
+          <h2>The HackAndroid Journey</h2>
           <p>
-            CollabSpace was founded in [Year] by [Founders' Names] with a vision
-            to create a centralized hub for all collaboration needs.  We
-            started as a small team with a big idea, and we've grown into a
-            thriving community of users who rely on our platform to connect,
-            share ideas, and work together effectively.  We are constantly
-            evolving and improving CollabSpace based on user feedback and the
-            latest technological advancements.
+            The "HackAndroid" hackathon provided the perfect environment to bring our vision to life.  Over the course of the event, we poured our creativity and technical skills into developing CollabSpace.  We faced challenges, learned from each other, and pushed ourselves to create something truly valuable.  The energy and collaborative spirit of the hackathon fueled our determination to build a platform that would not only meet the needs of teams but also inspire them to achieve more together.
           </p>
         </div>
 
         <div className="about-section">
-          <h2>Our Values</h2>
-          <ul>
-            <li><strong>Collaboration:</strong> We believe in the power of teamwork and shared purpose.</li>
-            <li><strong>Innovation:</strong> We are committed to pushing the boundaries of what's possible in online collaboration.</li>
-            <li><strong>User-centricity:</strong>  We prioritize the needs and feedback of our users.</li>
-            <li><strong>Simplicity:</strong> We strive to create a platform that is easy to use and intuitive.</li>
-            <li><strong>Excellence:</strong> We are dedicated to providing a high-quality experience for all our users.</li>
-          </ul>
+          <h2>Our Team</h2>
+          <p>
+            CollabSpace is the result of the combined talents and dedication of:
+            <ul>
+              <li><strong>Vedant Kudalkar </strong> </li>
+              <li><strong>Aarsh Jain </strong> </li>
+              <li><strong>Hardik Sondhi </strong> </li>
+              <li><strong>Mohammed Sahil Rizvi </strong> </li>
+            </ul>
+            We are proud of the work we accomplished together and excited to continue developing CollabSpace.
+          </p>
         </div>
+
+        <div className="about-section">
+          <h2>Our Vision</h2>
+          <p>
+          CollabSpace is a collaborative platform designed to empower students in their placement preparation journey.  It provides a centralized hub for teamwork, resource sharing, and focused practice, fostering a supportive community for shared success.  Our vision is to revolutionize the way students prepare for placements, ensuring they have the tools and support they need to confidently achieve their career goals.
+          </p>
+        </div>
+
 
         <div className="about-section">
           <h2>Contact Us</h2>
           <p>
-            Have questions or feedback? We'd love to hear from you!  Reach out to
-            us at:
+            We'd love to hear from you!
             <br />
-            Email: <a href="mailto:info@collabspace.com">info@collabspace.com</a>
-            <br />
-            Phone: +1 (555) 123-4567
+            Email: <a href="mailto:info@collabspace.com">vedant28kudalkar@gmail.com</a> {/* Replace with a real email */}
+            {/* Add other contact info if desired */}
           </p>
         </div>
       </div>
