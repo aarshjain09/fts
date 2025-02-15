@@ -36,7 +36,7 @@ const ChatRoomsList = ({ onJoinRoom }) => {
             <div className="Rooms">
                 <ul>
                     {rooms.map((room) => (
-                        <li key={room}>
+                        <li key={room} className="Join">
                             <button onClick={() => onJoinRoom(room)}>Join {room}</button>
                         </li>
                     ))}

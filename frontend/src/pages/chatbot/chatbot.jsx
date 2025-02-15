@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import './chatbot.css';
 const Chatbot = () => {
     const [categories, setCategories] = useState([]);  // Store available categories
     const [category, setCategory] = useState("");      // Store selected category
@@ -11,7 +11,7 @@ const Chatbot = () => {
 
     // Fetch categories from backend (Replace with actual categories if static)
     useEffect(() => {
-        setCategories(["Algorithms", "Machine Learning", "Data Science"]);  // Replace with actual categories from backend
+        setCategories(['General Programming', 'General Program', 'Data Structures', 'Languages and Frameworks', 'Database and SQL', 'Web Development', 'Software Testing', 'Version Control', 'System Design', 'Security', 'DevOps', 'Front-end', 'Back-end', 'Full-stack', 'Algorithms', 'Machine Learning', 'Distributed Systems', 'Networking', 'Low-level Systems', 'Database Systems', 'Data Engineering', 'Artificial Intelligence']);  // Replace with actual categories from backend
     }, []);
 
     // Function to start interview
@@ -102,11 +102,13 @@ const Chatbot = () => {
     };
 
     return (
-        <div style={{ maxWidth: "500px", margin: "auto", textAlign: "center" }}>
-            <h1>Interview Chatbot</h1>
+        <div className="chatbot-container" style={{ maxWidth: "500px", margin: "auto", textAlign: "center" }}>
+            <div className="Headingg">
+                <h1>Interview Chatbot</h1>
+            </div>
 
             {/* Category Selection */}
-            <div>
+            <div className="chatbot-category">
                 <label>Select Category:</label>
                 <select value={category} onChange={(e) => setCategory(e.target.value)}>
                     <option value="">-- Select --</option>
@@ -119,13 +121,13 @@ const Chatbot = () => {
             <br />
 
             {/* Start Interview Button */}
-            <button onClick={startInterview}>Start Interview</button>
+            <button className="chatbot-button" onClick={startInterview}>Start Interview</button>
 
             {/* Display Question */}
             {currentQuestion && (
-                <div>
+                <div className="chatbot-question">
                     <h3>Question: {currentQuestion}</h3>
-                    <textarea
+                    <textarea className="chatbot-textarea"
                         value={userAnswer}
                         onChange={(e) => setUserAnswer(e.target.value)}
                         placeholder="Type your answer here..."
@@ -133,17 +135,17 @@ const Chatbot = () => {
                         cols="50"
                     />
                     <br />
-                    <button onClick={submitAnswer}>Submit Answer</button>
-                    <button onClick={nextQuestion} style={{ marginLeft: "10px" }}>Next Question</button>
+                    <button className="chatbot-button" onClick={submitAnswer}>Submit Answer</button>
+                    <button className="chatbot-button" onClick={nextQuestion} style={{ marginLeft: "10px" }}>Next Question</button>
                 </div>
             )}
 
             {/* Feedback Section */}
             {feedback && (
-                <div>
+                <div className="chatbot-feedback">
                     <h3>Feedback:</h3>
                     <p>{feedback}</p>
-                    <p>Similarity Score: {similarityScore?.toFixed(2)}</p>
+                    <p className="chatbot-score">Similarity Score: {similarityScore?.toFixed(2)}</p>
                 </div>
             )}
         </div>

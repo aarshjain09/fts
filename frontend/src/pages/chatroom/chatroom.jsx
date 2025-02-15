@@ -42,7 +42,7 @@ const ChatRoom = ({ room, onLeave }) => {
 
             <div className="chat-box">
                 {messages.map((msg, index) => (
-                    <div key={index}>
+                    <div key={index} className="stronger">
                         <strong>{msg.sender === socket.id ? "You" : msg.sender}:</strong> {msg.text}
                     </div>
                 ))}

@@ -53,7 +53,7 @@ function Home() {
           <Link to="/chatbot" className="feature-card-link">
             <div className="feature-card">
               <div className="feature-icon">🤖</div>
-              <h3>AI Assistant</h3>
+              <h3>Mock Interview</h3>
               <p>Get intelligent support</p>
             </div>
           </Link>
